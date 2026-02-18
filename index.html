@@ -130,28 +130,47 @@
     </script>
 
     <script>
-        // استقبال الرسائل من الصفحة الأصلية
-        window.addEventListener('message', (event) => {
-            // التحقق من مصدر الرسالة (اختياري للأمان)
-            // if (event.origin !== 'YOUR_EXTENSION_ORIGIN') return;
-            
-            const data = event.data;
-            
-            if (data && data.type === 'DISPLAY_CONTENT') {
-                // تحديث العنوان والمحتوى
-                document.getElementById('title').textContent = data.title || 'عرض المحتوى';
-                
-                const contentElement = document.getElementById('content');
-                if (data.content) {
-                    contentElement.innerHTML = data.content.replace(/\n/g, '<hr>');
-                } else {
-                    contentElement.innerHTML = 'لا يوجد محتوى للعرض';
+        // ضع هنا رابط الإضافة أو الصفحة الموثوقة التي سترسل الرسائل
+const TRUSTED_ORIGIN = 'chrome-extension://feoedmhikfbgnlhmjkpnnbmnlgljnjcn'; // استبدل <EXTENSION_ID> بمعرف الإضافة
+
+// استقبال الرسائل من الصفحة الأصلية
+window.addEventListener('message', (event) => {
+    // ✅ التحقق من مصدر الرسائل
+    if (event.origin !== TRUSTED_ORIGIN) return;
+
+    const data = event.data || {};
+
+    if (data.type === 'DISPLAY_CONTENT') {
+        // تحديث العنوان بأمان
+        const titleElement = document.getElementById('title');
+        titleElement.textContent = typeof data.title === 'string'
+            ? data.title
+            : 'عرض المحتوى';
+
+        // تحديث المحتوى بدون استخدام innerHTML لتجنب XSS
+        const contentElement = document.getElementById('content');
+        contentElement.innerHTML = ''; // تفريغ المحتوى القديم
+
+        if (typeof data.content === 'string' && data.content.trim() !== '') {
+            // تقسيم النص حسب السطر وإضافة <hr> بين الأسطر
+            const lines = data.content.split('\n');
+            lines.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.textContent = line; // نص فقط، بدون HTML
+                contentElement.appendChild(div);
+
+                if (index < lines.length - 1) {
+                    contentElement.appendChild(document.createElement('hr'));
                 }
-            }
-        });
-        
-        // إعلام الصفحة الأصلية أن iframe جاهز
-        window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
+            });
+        } else {
+            contentElement.textContent = 'لا يوجد محتوى للعرض';
+        }
+    }
+});
+
+// إعلام الصفحة الأصلية أن iframe جاهز، مع تحديد المصدر الآمن
+window.parent.postMessage({ type: 'IFRAME_READY' }, TRUSTED_ORIGIN);
     </script>
 </body>
 </html>
