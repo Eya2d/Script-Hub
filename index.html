@@ -115,30 +115,59 @@
 const btn = document.getElementById("toggleBtn");
 const div = document.getElementById("myDiv");
 
+// إعدادات الأنيميشن مرة واحدة
+div.style.position = "absolute";
+div.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+div.style.transform = "translateY(20px)";
+div.style.opacity = "0";
+div.style.pointerEvents = "none";
+
+// دالة إظهار
+function showDiv() {
+  div.style.transform = "translateY(0)";
+  div.style.opacity = "1";
+  div.style.pointerEvents = "auto";
+  div.classList.add("show");
+}
+
+// دالة إخفاء (يختفي للأعلى)
+function hideDiv() {
+  div.style.transform = "translateY(-20px)";
+  div.style.opacity = "0";
+  div.style.pointerEvents = "none";
+  div.classList.remove("show");
+}
+
 // عند الضغط على الزر
 btn.addEventListener("mousedown", function (e) {
-  e.stopPropagation(); // منع انتشار الحدث
-  div.classList.toggle("show");
+  e.stopPropagation();
+
+  if (div.classList.contains("show")) {
+    hideDiv();
+  } else {
+    showDiv();
+  }
 });
 
 // عند الضغط داخل الديف لا يغلق
-div.addEventListener("click", function (e) {
+div.addEventListener("mousedown", function (e) {
   e.stopPropagation();
 });
 
 // عند الضغط خارج الديف يغلقه
 document.addEventListener("mousedown", function (e) {
   if (!div.contains(e.target) && e.target !== btn) {
-    div.classList.remove("show");
+    hideDiv();
   }
 });
 
 // عند تحريك عجلة الفأرة خارج الديف يغلقه
 document.addEventListener("wheel", function (e) {
   if (!div.contains(e.target) && e.target !== btn) {
-    div.classList.remove("show");
+    hideDiv();
   }
 });
+
     </script>
 
     <script>
