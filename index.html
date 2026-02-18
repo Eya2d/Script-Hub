@@ -138,12 +138,12 @@ function openDiv() {
 
 // دالة الإغلاق (يختفي للأعلى)
 function closeDiv() {
-  div.style.transform = "translateY(-100%)";
+  div.style.transform = "translateY(-10%)";
   div.style.opacity = "0";
 
   setTimeout(() => {
     div.style.display = "none";
-    div.style.transform = "translateY(100%)"; // يرجع للوضع الابتدائي
+    div.style.transform = "translateY(10%)"; // يرجع للوضع الابتدائي
   }, 300);
 
   isOpen = false;
