@@ -3,9 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View</title>
+    <title>View - عرض المحتوى</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3894ff;
+        }
+        .content {
+            line-height: 1.6;
+            font-size: 16px;
+            color: #444;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="container">
+        <div class="title" id="title">عرض المحتوى</div>
+        <div class="content" id="content"></div>
+        <div class="footer">تم العرض عبر iframe</div>
+    </div>
+
+    <script>
+        // استخراج المعاملات من URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const content = urlParams.get('content') || 'لا يوجد محتوى للعرض';
+        const title = urlParams.get('title') || 'عرض المحتوى';
+        
+        // عرض المحتوى مع الحفاظ على التنسيق
+        document.getElementById('title').textContent = title;
+        document.getElementById('content').innerHTML = content.replace(/\n/g, '<hr>');
+    </script>
 </body>
 </html>
