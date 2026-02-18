@@ -115,37 +115,48 @@
 const btn = document.getElementById("toggleBtn");
 const div = document.getElementById("myDiv");
 
-// إعدادات الأنيميشن مرة واحدة
+// تجهيز الديف مبدئياً
 div.style.position = "absolute";
-div.style.transition = "transform 0.3s ease, opacity 0.3s ease";
-div.style.transform = "translateY(20px)";
+div.style.left = "0";
+div.style.right = "0";
+div.style.transform = "translateY(100%)";
 div.style.opacity = "0";
-div.style.pointerEvents = "none";
+div.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+div.style.display = "none";
 
-// دالة إظهار
-function showDiv() {
-  div.style.transform = "translateY(0)";
-  div.style.opacity = "1";
-  div.style.pointerEvents = "auto";
-  div.classList.add("show");
+let isOpen = false;
+
+// دالة الفتح (يظهر من الأسفل)
+function openDiv() {
+  div.style.display = "block";
+  requestAnimationFrame(() => {
+    div.style.transform = "translateY(0)";
+    div.style.opacity = "1";
+  });
+  isOpen = true;
 }
 
-// دالة إخفاء (يختفي للأعلى)
-function hideDiv() {
-  div.style.transform = "translateY(-20px)";
+// دالة الإغلاق (يختفي للأعلى)
+function closeDiv() {
+  div.style.transform = "translateY(-100%)";
   div.style.opacity = "0";
-  div.style.pointerEvents = "none";
-  div.classList.remove("show");
+
+  setTimeout(() => {
+    div.style.display = "none";
+    div.style.transform = "translateY(100%)"; // يرجع للوضع الابتدائي
+  }, 300);
+
+  isOpen = false;
 }
 
 // عند الضغط على الزر
 btn.addEventListener("mousedown", function (e) {
   e.stopPropagation();
 
-  if (div.classList.contains("show")) {
-    hideDiv();
+  if (isOpen) {
+    closeDiv();
   } else {
-    showDiv();
+    openDiv();
   }
 });
 
@@ -157,17 +168,16 @@ div.addEventListener("mousedown", function (e) {
 // عند الضغط خارج الديف يغلقه
 document.addEventListener("mousedown", function (e) {
   if (!div.contains(e.target) && e.target !== btn) {
-    hideDiv();
+    if (isOpen) closeDiv();
   }
 });
 
 // عند تحريك عجلة الفأرة خارج الديف يغلقه
 document.addEventListener("wheel", function (e) {
   if (!div.contains(e.target) && e.target !== btn) {
-    hideDiv();
+    if (isOpen) closeDiv();
   }
 });
-
     </script>
 
     <script>
