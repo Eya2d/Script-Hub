@@ -59,14 +59,28 @@
     </div>
 
     <script>
-        // استخراج المعاملات من URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const content = urlParams.get('content') || 'لا يوجد محتوى للعرض';
-        const title = urlParams.get('title') || 'عرض المحتوى';
+        // استقبال الرسائل من الصفحة الأصلية
+        window.addEventListener('message', (event) => {
+            // التحقق من مصدر الرسالة (اختياري للأمان)
+            // if (event.origin !== 'YOUR_EXTENSION_ORIGIN') return;
+            
+            const data = event.data;
+            
+            if (data && data.type === 'DISPLAY_CONTENT') {
+                // تحديث العنوان والمحتوى
+                document.getElementById('title').textContent = data.title || 'عرض المحتوى';
+                
+                const contentElement = document.getElementById('content');
+                if (data.content) {
+                    contentElement.innerHTML = data.content.replace(/\n/g, '<hr>');
+                } else {
+                    contentElement.innerHTML = 'لا يوجد محتوى للعرض';
+                }
+            }
+        });
         
-        // عرض المحتوى مع الحفاظ على التنسيق
-        document.getElementById('title').textContent = title;
-        document.getElementById('content').innerHTML = content.replace(/\n/g, '<hr>');
+        // إعلام الصفحة الأصلية أن iframe جاهز
+        window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
     </script>
 </body>
 </html>
