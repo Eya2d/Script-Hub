@@ -129,9 +129,11 @@ document.addEventListener("mousedown", function (e) {
   }
 });
 
-// عند تحريك عجلة الفأرة تختفي الـdiv
-document.addEventListener("wheel", function () {
-  div.classList.remove("show");
+// عند تحريك عجلة الفأرة خارج الديف يغلقه
+document.addEventListener("wheel", function (e) {
+  if (!div.contains(e.target) && e.target !== btn) {
+    div.classList.remove("show");
+  }
 });
     </script>
 
