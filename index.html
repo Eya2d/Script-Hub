@@ -108,25 +108,31 @@
 
 
     <script>
-        const btn = document.getElementById("toggleBtn");
-        const div = document.getElementById("myDiv");
+const btn = document.getElementById("toggleBtn");
+const div = document.getElementById("myDiv");
 
-        // عند الضغط على الزر
-        btn.addEventListener("mousedown", function (e) {
-          e.stopPropagation(); // منع انتشار الحدث
-          div.classList.toggle("show");
-        });
-      
-        // عند الضغط داخل الديف لا يغلق
-        div.addEventListener("click", function (e) {
-          e.stopPropagation();
-        });
-      
-        document.addEventListener("mousedown", function (e) {
-          if (!div.contains(e.target) && e.target !== btn) {
-            div.classList.remove("show");
-          }
-        });
+// عند الضغط على الزر
+btn.addEventListener("mousedown", function (e) {
+  e.stopPropagation(); // منع انتشار الحدث
+  div.classList.toggle("show");
+});
+
+// عند الضغط داخل الديف لا يغلق
+div.addEventListener("click", function (e) {
+  e.stopPropagation();
+});
+
+// عند الضغط خارج الديف يغلقه
+document.addEventListener("mousedown", function (e) {
+  if (!div.contains(e.target) && e.target !== btn) {
+    div.classList.remove("show");
+  }
+});
+
+// عند تحريك عجلة الفأرة تختفي الـdiv
+document.addEventListener("wheel", function () {
+  div.classList.remove("show");
+});
     </script>
 
     <script>
